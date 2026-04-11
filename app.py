@@ -1,6 +1,7 @@
 import streamlit as st
 from modules.ui_styles import apply_custom_css
 from modules.data_loader import render_data_upload_section
+from modules.visualizer import render_visualization_section
 
 st.set_page_config(
     page_title="Dashboard Estadístico",  
@@ -35,3 +36,4 @@ if df is not None:
         st.subheader("Vista Previa de Registros")
         st.dataframe(df.head(10), use_container_width=True)
         st.caption(f"Total de registros activos: {df.shape[0]}")
+        variable_analizar = render_visualization_section(df) 
