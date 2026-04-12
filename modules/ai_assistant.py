@@ -37,8 +37,22 @@ def render_ai_section(stats_data):
             """
             
             try:
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                modelo_disponible = None
+                for m in genai.list_models():
+                    if 'generateContent' in m.supported_generation_methods:
+                        modelo_disponible = m.name.replace('models/', '')
+                        if 'vision' not in modelo_disponible.lower():
+                            break
+                
+                if not modelo_disponible:
+                    st.error("No se encontraron modelos de texto compatibles para esta API Key.")
+                    return
+
+                model = genai.GenerativeModel(modelo_disponible)
                 response = model.generate_content(prompt)
+                
+                st.caption(f"Modelo utilizado: {modelo_disponible}")
                 st.info(response.text)
+                
             except Exception as e:
                 st.error(f"Error de conexion con la API: {e}")
