@@ -3,9 +3,10 @@ from modules.ui_styles import apply_custom_css
 from modules.data_loader import render_data_upload_section
 from modules.visualizer import render_visualization_section
 from modules.stats_engine import render_hypothesis_testing
+from modules.ai_assistant import render_ai_section
 
 st.set_page_config(
-    page_title="Dashboard Estadístico",  
+    page_title="Dashboard Estadistico", 
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -14,19 +15,14 @@ apply_custom_css()
 
 with st.sidebar:
     st.markdown("## StatHub Pro")
-    st.caption("Panel de Análisis y Pruebas")
+    st.caption("Panel de Analisis")
     st.markdown("---")
-    
     st.button("Carga de Datos", use_container_width=True, type="primary")
-    st.button("Visualización", use_container_width=True)
-    st.button("Prueba de Hipótesis", use_container_width=True)
-    st.button("Asistente IA (Gemini)", use_container_width=True)
-    
-    st.markdown("---")
-    st.info("**Tip:** Comienza cargando un dataset para habilitar el análisis.")
+    st.button("Visualizacion", use_container_width=True)
+    st.button("Prueba de Hipotesis", use_container_width=True)
+    st.button("Asistente IA", use_container_width=True)
 
-st.title("Módulo de Reclutamiento / Análisis de Datos")
-st.markdown("*Plataforma interactiva para evaluación estadística asistida por IA.*")
+st.title("Analisis de Datos y Prueba de Hipotesis")
 st.markdown("---")
 
 with st.container():
@@ -36,8 +32,12 @@ if df is not None:
     with st.container():
         st.subheader("Vista Previa de Registros")
         st.dataframe(df.head(10), use_container_width=True)
-        st.caption(f"Total de registros activos: {df.shape[0]}")
-        variable_analizar = render_visualization_section(df)
+        st.caption(f"Total de registros: {df.shape[0]}")
 
-        if variable_analizar is not None:
-            resultados_stats = render_hypothesis_testing(df, variable_analizar)
+    variable_analizar = render_visualization_section(df)
+    
+    if variable_analizar is not None:
+        resultados_stats = render_hypothesis_testing(df, variable_analizar)
+        
+        if resultados_stats is not None:
+            render_ai_section(resultados_stats)
